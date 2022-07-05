@@ -1,15 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { NetworkContextProvider } from './blockchain-utils';
+
+const network = window.location.pathname.split('/')[1];
+if (!network) {
+  window.location.pathname = '/westend';
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter basename={network}>
+      <NetworkContextProvider network={network}>
+        <App />
+      </NetworkContextProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

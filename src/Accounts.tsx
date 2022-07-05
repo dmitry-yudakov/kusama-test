@@ -1,51 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import {
-  web3Accounts,
-  web3Enable,
-  // web3FromAddress,
-  // web3ListRpcProviders,
-  // web3UseRpcProvider,
-} from '@polkadot/extension-dapp';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { web3Accounts } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { useNavigate, useParams } from 'react-router-dom';
+import { formatBalance, getTokenSymbol, useNetwork } from './blockchain-utils';
 // import { Balance } from '@polkadot/types/interfaces';
-
-// const wsProvider = new WsProvider("wss://rpc.polkadot.io");
-const wsProvider = new WsProvider('wss://westend-rpc.polkadot.io');
-
-const initExtension = async () => {
-  const injected = await web3Enable('Balance App');
-  return { hasExtension: injected.length > 0 };
-};
-
-let _api: ApiPromise | null = null;
-const getConn = async () => {
-  if (!_api) {
-    _api = await ApiPromise.create({ provider: wsProvider });
-  }
-  return _api;
-};
-
-// TODO proper type
-const formatBalance = (balance: any) => {
-  return (Number(balance) / 1000000000000).toFixed(4);
-};
-
-// TODO proper type
-const getTokenSymbol = (registry: any) => {
-  return registry?.chainTokens?.[0] || 'N/A';
-};
 
 const AccountInfo = ({ accountId }: { accountId: string }) => {
   const [accountInfo, setAccountInfo] = useState<any>();
   const isLoading = accountInfo === undefined;
   const [error, setError] = useState<string>();
 
+  const { api } = useNetwork();
+
   useEffect(() => {
+    if (!api) return;
+
     const fetchData = async () => {
       setError(undefined);
+      setAccountInfo(undefined);
       try {
-        const api = await getConn();
         const accountInfo: any = await api.query.system.account(accountId);
         console.log('Account info:', accountInfo);
 
@@ -60,7 +33,7 @@ const AccountInfo = ({ accountId }: { accountId: string }) => {
       }
     };
     fetchData();
-  }, [accountId]);
+  }, [accountId, api]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -108,11 +81,11 @@ const Accounts: React.FC = () => {
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[] | null>();
   const isLoading = accounts === undefined;
   const [error, setError] = useState<string>();
-  const [selectedAccountId, setSelectedAccountId] = useState<string>();
+  const { selectedAccountId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    initExtension()
-      .then(() => web3Accounts())
+    web3Accounts()
       .then(setAccounts)
       .catch((err) => {
         console.log('Error getting extension info', err);
@@ -130,16 +103,15 @@ const Accounts: React.FC = () => {
 
   return (
     <div>
-      <h1>Extension Accounts</h1>
-      <pre>{JSON.stringify(accounts, null, 2)}</pre>
       {!!accounts && (
         <AccountSelector
           options={accounts}
           value={selectedAccountId}
-          onChange={setSelectedAccountId}
+          onChange={(val) => navigate(val ? `/${val}` : '/')}
         />
       )}
       {!!selectedAccountId && <AccountInfo accountId={selectedAccountId} />}
+      {/* <pre>{JSON.stringify(accounts, null, 2)}</pre> */}
     </div>
   );
 };
