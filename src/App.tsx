@@ -39,10 +39,12 @@ function App() {
       <Navbar>
         <NetworkSelector value={network} onChange={changeNetwork} />
       </Navbar>
-      <Routes>
-        <Route path="*" element={<Accounts />} />
-        <Route path="/:selectedAccountId" element={<Accounts />} />
-      </Routes>
+      <div className="container">
+        <Routes>
+          <Route path="*" element={<Accounts />} />
+          <Route path="/:selectedAccountId" element={<Accounts />} />
+        </Routes>
+      </div>
     </div>
   );
 }

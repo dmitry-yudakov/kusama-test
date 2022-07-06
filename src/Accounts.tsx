@@ -55,7 +55,8 @@ const AccountInfo = ({ accountId }: { accountId: string }) => {
       {formatAddress(accountId, network)}
       {!!balance && (
         <div>
-          Balance: {formatBalance(balance.free)} {getTokenSymbol(registry)}
+          Balance: <strong>{formatBalance(balance.free)}</strong>{' '}
+          {getTokenSymbol(registry)}
         </div>
       )}
     </div>
@@ -109,13 +110,19 @@ const Accounts: React.FC = () => {
   return (
     <div>
       {!!accounts && (
-        <AccountSelector
-          options={accounts}
-          value={selectedAccountId}
-          onChange={(val) => navigate(val ? `/${val}` : '/')}
-        />
+        <div className="panel">
+          <AccountSelector
+            options={accounts}
+            value={selectedAccountId}
+            onChange={(val) => navigate(val ? `/${val}` : '/')}
+          />
+        </div>
       )}
-      {!!selectedAccountId && <AccountInfo accountId={selectedAccountId} />}
+      {!!selectedAccountId && (
+        <div className="paper">
+          <AccountInfo accountId={selectedAccountId} />
+        </div>
+      )}
       {/* <pre>{JSON.stringify(accounts, null, 2)}</pre> */}
     </div>
   );
