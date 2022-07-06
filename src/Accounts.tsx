@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatBalance, getTokenSymbol, useNetwork } from './blockchain-utils';
+import {
+  formatAddress,
+  formatBalance,
+  getTokenSymbol,
+  useNetwork,
+} from './blockchain-utils';
 // import { Balance } from '@polkadot/types/interfaces';
 
 const AccountInfo = ({ accountId }: { accountId: string }) => {
@@ -10,7 +15,7 @@ const AccountInfo = ({ accountId }: { accountId: string }) => {
   const isLoading = accountInfo === undefined;
   const [error, setError] = useState<string>();
 
-  const { api } = useNetwork();
+  const { api, network } = useNetwork();
 
   useEffect(() => {
     if (!api) return;
@@ -47,7 +52,7 @@ const AccountInfo = ({ accountId }: { accountId: string }) => {
 
   return (
     <div>
-      {accountId}
+      {formatAddress(accountId, network)}
       {!!balance && (
         <div>
           Balance: {formatBalance(balance.free)} {getTokenSymbol(registry)}

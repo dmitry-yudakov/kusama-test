@@ -13,7 +13,7 @@ import {
   // web3ListRpcProviders,
   // web3UseRpcProvider,
 } from '@polkadot/extension-dapp';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 
 const getNetworkEndpoint = (network: string) => {
   switch (network) {
@@ -22,6 +22,16 @@ const getNetworkEndpoint = (network: string) => {
     case 'westend':
     default:
       return 'wss://westend-rpc.polkadot.io';
+  }
+};
+const getNetworkId = (network: string) => {
+  switch (network) {
+    case 'kusama':
+      return 2;
+    case 'westend':
+      return 42;
+    default:
+      return 0;
   }
 };
 
@@ -85,4 +95,10 @@ export const formatBalance = (balance: any) => {
 // TODO proper type
 export const getTokenSymbol = (registry: any) => {
   return registry?.chainTokens?.[0] || 'N/A';
+};
+
+const keyring = new Keyring();
+
+export const formatAddress = (address: string, network: string) => {
+  return keyring.encodeAddress(address, getNetworkId(network));
 };
