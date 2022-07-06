@@ -1,25 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { web3Accounts } from '@polkadot/extension-dapp';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import React, { useMemo } from 'react';
+import { observer } from 'mobx-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AccountSelector, AccountInfo } from '../components';
+import { AccountsModel } from '../models/Accounts';
 
 const AccountsPage: React.FC = () => {
-  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[] | null>();
-  const isLoading = accounts === undefined;
-  const [error, setError] = useState<string>();
+  const { accounts, isLoading, error } = useMemo(
+    () => AccountsModel.create(),
+    []
+  );
   const { selectedAccountId } = useParams();
+  console.debug('AccountsPage', { accounts, isLoading, error });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    web3Accounts()
-      .then(setAccounts)
-      .catch((err) => {
-        console.log('Error getting extension info', err);
-        setError(err.message);
-        setAccounts(null);
-      });
-  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -48,4 +40,4 @@ const AccountsPage: React.FC = () => {
     </div>
   );
 };
-export default AccountsPage;
+export default observer(AccountsPage);

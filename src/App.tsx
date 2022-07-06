@@ -1,6 +1,6 @@
 import AccountsPage from './pages/AccountsPage';
 import { Routes, Route } from 'react-router-dom';
-import { useNetwork } from './blockchain-utils';
+import { useNetwork } from './models/Root';
 import { Navbar, NetworkSelector } from './components';
 import './App.css';
 

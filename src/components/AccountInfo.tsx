@@ -1,61 +1,42 @@
-import { useEffect, useState } from 'react';
-import {
-  formatAddress,
-  formatBalance,
-  getTokenSymbol,
-  useNetwork,
-} from '../blockchain-utils';
-// import { Balance } from '@polkadot/types/interfaces';
+import { observer } from 'mobx-react';
+import { useMemo } from 'react';
+import { formatAddress, formatBalance } from '../blockchain-utils';
+import { AccountInfoModel } from '../models/Accounts';
+import { useNetwork } from '../models/Root';
 
-export const AccountInfo = ({ accountId }: { accountId: string }) => {
-  const [accountInfo, setAccountInfo] = useState<any>();
-  const isLoading = accountInfo === undefined;
-  const [error, setError] = useState<string>();
-
+export const AccountInfo = observer(({ accountId }: { accountId: string }) => {
   const { api, network } = useNetwork();
+  // I know...
+  (window as any).api = api;
 
-  useEffect(() => {
-    if (!api) return;
-
-    const fetchData = async () => {
-      setError(undefined);
-      setAccountInfo(undefined);
-      try {
-        const accountInfo: any = await api.query.system.account(accountId);
-        console.log('Account info:', accountInfo);
-
-        const { data: bal, registry } = accountInfo;
-        console.log('BALANCE:', bal.free);
-        console.log('token symbol:', getTokenSymbol(registry));
-
-        setAccountInfo(accountInfo);
-      } catch (e: any) {
-        setError(e.message);
-        setAccountInfo(null);
-      }
-    };
-    fetchData();
-  }, [accountId, api]);
+  const { balance, tokenSymbol, isLoading, error } = useMemo(
+    () => AccountInfoModel.create({ id: accountId }),
+    [accountId]
+  );
+  console.debug('AccountInfo', {
+    accountId,
+    balance,
+    tokenSymbol,
+    isLoading,
+    error,
+  });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error || !accountInfo) {
-    return <div>Error: {error || 'Account not found'}</div>;
+  if (error) {
+    return <div>Error: {error}</div>;
   }
-
-  const { data: balance, registry } = accountInfo;
 
   return (
     <div>
       {formatAddress(accountId, network)}
-      {!!balance && (
+      {balance !== undefined && (
         <div>
-          Balance: <strong>{formatBalance(balance.free)}</strong>{' '}
-          {getTokenSymbol(registry)}
+          Balance: <strong>{formatBalance(balance)}</strong> {tokenSymbol}
         </div>
       )}
     </div>
   );
-};
+});

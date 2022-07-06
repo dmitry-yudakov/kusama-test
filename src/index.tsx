@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { NetworkContextProvider } from './blockchain-utils';
+import { NetworkContextProvider } from './models/Root';
 
 const network = window.location.pathname.split('/')[1];
 if (!network) {

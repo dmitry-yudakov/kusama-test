@@ -1,8 +1,8 @@
 import React from 'react';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { AccountDescriptor } from '../models/Accounts';
 
 export const AccountSelector: React.FC<{
-  options: InjectedAccountWithMeta[];
+  options: AccountDescriptor[];
   value: string | undefined;
   onChange: (val: string | undefined) => void;
 }> = ({ options, value, onChange }) => {
@@ -12,9 +12,9 @@ export const AccountSelector: React.FC<{
       onChange={(e) => onChange(e.target.value || undefined)}
     >
       <option value="">Select an account</option>
-      {options.map((opt) => (
-        <option key={opt.address} value={opt.address}>
-          {opt.meta.name}
+      {options.map((acc) => (
+        <option key={acc.id} value={acc.id}>
+          {acc.name}
         </option>
       ))}
     </select>
