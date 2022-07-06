@@ -24,6 +24,7 @@ function App() {
         <a
           href="https://polkadot.js.org/extension/"
           target="_blank"
+          rel="noreferrer"
           style={{ color: 'orange' }}
         >
           Polkadot.js extension

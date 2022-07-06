@@ -6,13 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  web3Accounts,
-  web3Enable,
-  // web3FromAddress,
-  // web3ListRpcProviders,
-  // web3UseRpcProvider,
-} from '@polkadot/extension-dapp';
+import { web3Enable } from '@polkadot/extension-dapp';
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 
 const getNetworkEndpoint = (network: string) => {
