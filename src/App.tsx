@@ -1,4 +1,4 @@
-import Accounts from './Accounts';
+import AccountsPage from './pages/AccountsPage';
 import { Routes, Route } from 'react-router-dom';
 import { useNetwork } from './blockchain-utils';
 import { Navbar, NetworkSelector } from './components';
@@ -41,8 +41,8 @@ function App() {
       </Navbar>
       <div className="container">
         <Routes>
-          <Route path="*" element={<Accounts />} />
-          <Route path="/:selectedAccountId" element={<Accounts />} />
+          <Route path="*" element={<AccountsPage />} />
+          <Route path="/:selectedAccountId" element={<AccountsPage />} />
         </Routes>
       </div>
     </div>
