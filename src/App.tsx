@@ -20,7 +20,7 @@ function App() {
   if (!hasExtension) {
     return (
       <div className="fill-center">
-        Oops, it seems{' '}
+        Oops, it seems&nbsp;
         <a
           href="https://polkadot.js.org/extension/"
           target="_blank"
@@ -28,8 +28,8 @@ function App() {
           style={{ color: 'orange' }}
         >
           Polkadot.js extension
-        </a>{' '}
-        not installed or permissions not given.
+        </a>
+        &nbsp; is not installed or permissions not given.
       </div>
     );
   }
