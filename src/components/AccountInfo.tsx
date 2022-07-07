@@ -6,12 +6,10 @@ import { useNetwork } from '../models/Root';
 
 export const AccountInfo = observer(({ accountId }: { accountId: string }) => {
   const { api, network } = useNetwork();
-  // I know...
-  (window as any).api = api;
 
   const { balance, tokenSymbol, isLoading, error } = useMemo(
-    () => AccountInfoModel.create({ id: accountId }),
-    [accountId]
+    () => AccountInfoModel.create({ id: accountId }, { api }),
+    [accountId, api]
   );
   console.debug('AccountInfo', {
     accountId,

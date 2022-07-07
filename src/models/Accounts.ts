@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { applySnapshot, flow, Instance, types } from 'mobx-state-tree';
+import { applySnapshot, flow, getEnv, Instance, types } from 'mobx-state-tree';
 
 const AccountDescriptorModel = types.model({
   id: types.identifier,
@@ -44,7 +44,7 @@ export const AccountInfoModel = types
     afterCreate: flow(function* () {
       try {
         self.isLoading = true;
-        const api = (window as any).api as ApiPromise;
+        const api = getEnv(self).api as ApiPromise;
 
         const accountInfo: any = yield api.query.system.account(self.id);
         console.debug('Account info:', accountInfo);
