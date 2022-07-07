@@ -14,12 +14,12 @@ function App() {
   const { network, isLoading, hasExtension } = useNetwork();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="fill-center">Loading...</div>;
   }
 
   if (!hasExtension) {
     return (
-      <div>
+      <div className="fill-center">
         Oops, it seems{' '}
         <a
           href="https://polkadot.js.org/extension/"
